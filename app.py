@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import LanusStats as ls
+import os
 
 app = Flask(__name__)
 fotmob = ls.FotMob()
@@ -17,4 +18,6 @@ def get_shotmap():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Usar el puerto asignado por Render (si está disponible), o 5000 como fallback
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
