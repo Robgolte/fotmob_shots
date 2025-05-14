@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import LanusStats as ls
 import os
+import traceback
 
 app = Flask(__name__)
 fotmob = ls.FotMob()
@@ -15,8 +16,7 @@ def get_shotmap():
         return jsonify({'error': 'Falta el parámetro playerId'}), 400
 
     try:
-        # Aquí llamamos a la función get_player_shotmap de LanusStats con los parámetros correctos
-        # El primer y segundo parámetro parece ser constante, mientras que el tercer parámetro es el player_id recibido
+        # Llamamos a la función get_player_shotmap con los parámetros correctos
         data = fotmob.get_player_shotmap("1", "0", player_id)
         
         # Verificar si se obtuvo una respuesta válida
@@ -25,7 +25,9 @@ def get_shotmap():
         else:
             return jsonify({'error': 'No se encontraron datos para el jugador con ID: ' + player_id}), 404
     except Exception as e:
-        # En caso de error, devolver un mensaje con el error
+        # Agregar detalles del error para depuración
+        print("Error al obtener datos:", e)
+        traceback.print_exc()  # Esto imprimirá la traza completa del error
         return jsonify({'error': 'Error al obtener los datos: ' + str(e)}), 500
 
 if __name__ == '__main__':
